@@ -1,0 +1,5 @@
+"请将以下视频文件放到 media/video/performance/ 文件夹："  
+""  
+"百年文脉传承人谈起源.mp4"  
+""  
+"可选：将视频封面图放到 images/modules/module1/ 文件夹："  
