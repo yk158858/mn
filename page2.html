@@ -3,77 +3,341 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>数据透视 - 雅韵思辨 - 南曲非遗文化专题</title>
+    <title>非遗打卡 - 弦音互动 - 南曲非遗文化专题</title>
     <link rel="stylesheet" href="../css/style.css">
-    <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
     <style>
-        .chart-container {
-            width: 100%;
-            min-width: 280px;
-            height: 320px;
-            margin: 0;
-        }
-        .chart-row {
-            display: flex;
-            gap: 1rem;
-            margin: 2rem 0;
-            flex-wrap: nowrap;
-        }
-        .chart-row.three-items {
-            flex-wrap: nowrap;
-        }
-        .chart-item {
-            flex: 1;
-            min-width: 280px;
+        /* 上传区域样式 */
+        .upload-section {
             background: white;
-            padding: 1rem;
-            border-radius: 10px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-        }
-        .chart-item h4 {
-            color: #2d5016;
-            text-align: center;
-            margin-bottom: 0.3rem;
-            font-size: 1rem;
-        }
-        .word-cloud-section {
-            display: flex;
-            align-items: center;
-            gap: 1.5rem;
-            margin: 2rem 0;
-        }
-        .word-cloud-section .chart-item {
-            flex: 1;
-        }
-        .word-cloud-image {
-            width: 100%;
-            max-width: 450px;
-            height: auto;
-            border-radius: 10px;
-        }
-        .intro-text {
-            background: linear-gradient(135deg, #f4a460 0%, #e69546 100%);
-            color: white;
-            padding: 2rem;
+            padding: 2.5rem;
             border-radius: 15px;
             margin-bottom: 2rem;
-            line-height: 1.8;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
         }
-        .content-text {
-            color: #555;
-            line-height: 1.8;
+
+        .upload-area {
+            border: 3px dashed #d4a574;
+            border-radius: 15px;
+            padding: 3rem;
+            text-align: center;
+            background: linear-gradient(135deg, #faf8f3 0%, #f5f0e6 100%);
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .upload-area:hover {
+            border-color: #f4a460;
+            background: linear-gradient(135deg, #f5f0e6 0%, #ede5d8 100%);
+            transform: translateY(-3px);
+        }
+
+        .upload-area.dragover {
+            border-color: #4a7c23;
+            background: linear-gradient(135deg, #e8f5e9 0%, #d4efcd 100%);
+        }
+
+        .upload-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        .upload-text {
+            font-size: 1.2rem;
+            color: #666;
+            margin-bottom: 0.5rem;
+        }
+
+        .upload-hint {
+            font-size: 0.9rem;
+            color: #999;
+        }
+
+        .upload-form {
+            margin-top: 2rem;
+            display: none;
+        }
+
+        .upload-form.active {
+            display: block;
+            animation: fadeIn 0.5s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .form-group {
             margin-bottom: 1.5rem;
-            text-align: justify;
         }
-        @media (max-width: 1200px) {
-            .chart-row {
-                flex-wrap: wrap;
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #2d5016;
+            font-weight: bold;
+        }
+
+        .form-input,
+        .form-textarea {
+            width: 100%;
+            padding: 0.8rem 1rem;
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: all 0.3s;
+            font-family: inherit;
+        }
+
+        .form-input:focus,
+        .form-textarea:focus {
+            outline: none;
+            border-color: #4a7c23;
+            box-shadow: 0 0 0 3px rgba(74, 124, 35, 0.1);
+        }
+
+        .form-textarea {
+            resize: vertical;
+            min-height: 120px;
+        }
+
+        .btn-submit {
+            background: linear-gradient(135deg, #4a7c23 0%, #5d9f2c 100%);
+            color: white;
+            padding: 1rem 3rem;
+            border: none;
+            border-radius: 25px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(74, 124, 35, 0.3);
+        }
+
+        .btn-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(74, 124, 35, 0.4);
+        }
+
+        /* 作品展示样式 */
+        .works-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-top: 1.5rem;
+        }
+
+        .work-card {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s;
+        }
+
+        .work-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 40px rgba(74, 124, 35, 0.15);
+        }
+
+        .work-image {
+            height: 200px;
+            background: linear-gradient(135deg, #f4a460 0%, #e69546 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 3rem;
+            position: relative;
+        }
+
+        .work-tag {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            color: #4a7c23;
+            font-weight: bold;
+        }
+
+        .work-content {
+            padding: 1.5rem;
+        }
+
+        .work-title {
+            font-size: 1.3rem;
+            color: #2d5016;
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+        }
+
+        .work-author {
+            color: #666;
+            font-size: 0.9rem;
+            margin-bottom: 0.8rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .work-desc {
+            color: #777;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            margin-bottom: 1rem;
+        }
+
+        .work-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 1rem;
+            border-top: 1px solid #e9ecef;
+        }
+
+        .work-date {
+            color: #999;
+            font-size: 0.85rem;
+        }
+
+        .work-likes {
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+            color: #f4a460;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .work-likes:hover {
+            transform: scale(1.1);
+        }
+
+        .work-likes.liked {
+            color: #e63946;
+        }
+
+        /* 筛选样式 */
+        .filter-bar {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            padding: 0.6rem 1.5rem;
+            background: white;
+            border: 2px solid #e9ecef;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: bold;
+            color: #666;
+        }
+
+        .filter-btn:hover,
+        .filter-btn.active {
+            background: #4a7c23;
+            border-color: #4a7c23;
+            color: white;
+        }
+
+        /* 文件预览 */
+        .file-preview {
+            display: none;
+            margin-top: 1.5rem;
+            padding: 1rem;
+            background: #f8f9fa;
+            border-radius: 10px;
+            border: 2px solid #e9ecef;
+        }
+
+        .file-preview.active {
+            display: block;
+        }
+
+        .preview-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 0.8rem;
+            background: white;
+            border-radius: 8px;
+            margin-bottom: 0.5rem;
+        }
+
+        .preview-icon {
+            font-size: 2rem;
+        }
+
+        .preview-info {
+            flex: 1;
+        }
+
+        .preview-name {
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 0.3rem;
+        }
+
+        .preview-size {
+            font-size: 0.85rem;
+            color: #999;
+        }
+
+        .preview-remove {
+            color: #e63946;
+            cursor: pointer;
+            font-weight: bold;
+            padding: 0.3rem 0.6rem;
+            border-radius: 5px;
+            transition: all 0.3s;
+        }
+
+        .preview-remove:hover {
+            background: #ffe5e5;
+        }
+
+        /* 上传成功提示 */
+        .upload-success {
+            display: none;
+            padding: 2rem;
+            background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
+            border-radius: 15px;
+            text-align: center;
+            margin-top: 1.5rem;
+            animation: fadeIn 0.5s;
+        }
+
+        .upload-success.active {
+            display: block;
+        }
+
+        .success-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        /* 响应式 */
+        @media (max-width: 768px) {
+            .works-grid {
+                grid-template-columns: 1fr;
             }
-            .word-cloud-section {
-                flex-direction: column;
+
+            .upload-area {
+                padding: 2rem;
             }
-            .word-cloud-image {
-                max-width: 100%;
+
+            .upload-icon {
+                font-size: 3rem;
             }
         }
     </style>
@@ -86,122 +350,234 @@
             <span>南曲文化</span>
         </div>
         <div class="nav-menu">
-            <a href="../../南曲/index.html">首页</a>
+            <a href="../index.html">首页</a>
             <a href="../module1/index.html">丝弦溯古</a>
             <a href="../module2/index.html">现代弦歌</a>
-            <a href="index.html" class="active">雅韵思辨</a>
-            <a href="../module4/index.html">弦音互动</a>
+            <a href="../module3/index.html">雅韵思辨</a>
+            <a href="index.html" class="active">弦音互动</a>
         </div>
     </nav>
 
     <!-- 面包屑导航 -->
     <div class="breadcrumb">
-        <a href="../../index.html">首页</a> > 
-        <a href="index.html">雅韵思辨</a> > 
-        <span>数据透视</span>
+        <a href="../index.html">首页</a> > 
+        <a href="index.html">弦音互动</a> > 
+        <span>非遗打卡</span>
     </div>
 
     <!-- 页面内容 -->
     <section class="page-content">
-        <h1>数据透视</h1>
-        <div class="intro-text">
-            <p>作为土家族珍贵的非遗瑰宝，五峰南曲承载着地域文化记忆与民族艺术基因。为摸清其当代传承脉络，本次线上调研回收有效问卷113份，覆盖宜昌及五峰本地各年龄段、不同身份群体，数据背后既显传承根基，亦暴露发展痛点，为这一古老艺术的活化之路提供了精准参照。</p>
+        <h1>非遗打卡</h1>
+        <div class="page-intro">
+            <p>寻找身边的南曲,上传照片视频,分享你的南曲故事,全民参与的文化展示平台。</p>
         </div>
 
+        <!-- 上传作品 -->
         <div class="content-section">
-            <h2>一、认知画像：九成受众停留在基础层面，本地群体认知更深</h2>
-            <p class="content-text">调研显示，五峰南曲的认知度呈现"广而不深"的特征。仅2.65%的受访者能"非常了解"其唱腔、唱词及文化内涵，48.67%为"一般了解"（知晓是本地非遗、听过片段），另有48.67%仅"听过名称"，深度认知群体极度稀缺。</p>
-            <p class="content-text">地域与居住时长成为认知度的关键影响因素。户籍为五峰县内的受访者中，"非常了解"者占比66.67%，显著高于宜昌市其他区县及省内其他城市群体；长期居住者对南曲的了解程度普遍高于居住时长较短者，其中"非常了解"群体中66.67%为长期居住人口，印证了本土文化浸润对认知的提升作用。而从年龄维度看，19-30岁群体占调研样本的45.13%，成为核心受访群体，但该群体认知深度并未同步领先，年轻群体的文化渗透仍需加强。</p>
-            
-            <div class="chart-row three-items">
-                <div class="chart-item">
-                    <h4>年龄分布</h4>
-                    <div id="chart1" class="chart-container"></div>
+            <h2>📤 上传作品</h2>
+            <div class="upload-section">
+                <div class="upload-area" id="uploadArea">
+                    <span class="upload-icon">☁️</span>
+                    <p class="upload-text">点击或拖拽文件到此处上传</p>
+                    <p class="upload-hint">支持 JPG、PNG、MP4 格式，单个文件不超过 50MB</p>
+                    <input type="file" id="fileInput" accept=".jpg,.jpeg,.png,.mp4" multiple style="display: none;">
                 </div>
-                <div class="chart-item">
-                    <h4>居住地分布</h4>
-                    <div id="chart2" class="chart-container"></div>
+
+                <!-- 文件预览 -->
+                <div class="file-preview" id="filePreview"></div>
+
+                <!-- 上传表单 -->
+                <div class="upload-form" id="uploadForm">
+                    <div class="form-group">
+                        <label class="form-label">作品标题 *</label>
+                        <input type="text" class="form-input" id="workTitle" placeholder="给你的作品起个好听的名字">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">作品类型 *</label>
+                        <select class="form-input" id="workType">
+                            <option value="">请选择作品类型</option>
+                            <option value="photo">摄影作品</option>
+                            <option value="video">短视频</option>
+                            <option value="performance">演出记录</option>
+                            <option value="learning">学习心得</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">作者昵称 *</label>
+                        <input type="text" class="form-input" id="authorName" placeholder="你的昵称">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">作品描述 *</label>
+                        <textarea class="form-textarea" id="workDesc" placeholder="分享你的南曲故事、心得体会..."></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">联系方式（选填，方便我们联系你）</label>
+                        <input type="text" class="form-input" id="contact" placeholder="邮箱或手机号">
+                    </div>
+                    <button type="submit" class="btn-submit" id="submitBtn">提交作品</button>
                 </div>
-                <div class="chart-item">
-                    <h4>受众了解程度</h4>
-                    <div id="chart3" class="chart-container"></div>
+
+                <!-- 上传成功提示 -->
+                <div class="upload-success" id="uploadSuccess">
+                    <span class="success-icon">✅</span>
+                    <h3>上传成功！</h3>
+                    <p>感谢您的分享，作品审核通过后将展示在下方</p>
                 </div>
             </div>
         </div>
 
+        <!-- 精选作品 -->
         <div class="content-section">
-            <h2>二、传播困境：传统路径主导，线上渗透率不足三成</h2>
-            <p class="content-text">在信息传播多元化的当下，五峰南曲的传播渠道仍局限于传统场景。数据显示，75.22%的受访者通过"景区宣传/文旅推广"了解南曲，成为首要途径，而短视频、直播等新媒体渠道的渗透率仅28.32%，与年轻群体信息获取习惯严重脱节。</p>
-            <p class="content-text">接触频率同样反映出传播短板：46.9%的受访者"偶尔"接触（每年数次），28.32%能"经常"接触（每月1次及以上），但仍有13.27%"从未接触"、11.5%"极少接触"，近四分之一人群的文化触达存在空白。值得关注的是，31-45岁群体"从未接触"比例高达26.09%，成为触达薄弱的关键年龄段，而18岁及以下群体"经常"接触比例达34.29%，校园场景的传播效能初步显现——70.41%的受访者通过"校园演出/课堂"接触南曲，成为核心接触场景。</p>
-            
-            <div class="chart-row three-items">
-                <div class="chart-item">
-                    <h4>接触南曲的频率</h4>
-                    <div id="chart4" class="chart-container"></div>
+            <h2>🌟 精选作品</h2>
+            <div class="filter-bar">
+                <button class="filter-btn active" data-filter="all">全部</button>
+                <button class="filter-btn" data-filter="photo">摄影作品</button>
+                <button class="filter-btn" data-filter="video">短视频</button>
+                <button class="filter-btn" data-filter="performance">演出记录</button>
+                <button class="filter-btn" data-filter="learning">学习心得</button>
+            </div>
+            <div class="works-grid" id="worksGrid">
+                <!-- 作品卡片1 -->
+                <div class="work-card" data-type="photo">
+                    <div class="work-image">
+                        📷
+                        <span class="work-tag">摄影作品</span>
+                    </div>
+                    <div class="work-content">
+                        <h3 class="work-title">柴埠溪景区观演记</h3>
+                        <p class="work-author">👤 李小姐</p>
+                        <p class="work-desc">第一次现场观看南曲表演，被深深震撼。表演者的神态、服饰、道具都充满了土家族的文化特色，三弦的声音清脆悦耳，令人陶醉。</p>
+                        <div class="work-meta">
+                            <span class="work-date">2026-01-20</span>
+                            <span class="work-likes" onclick="toggleLike(this)">
+                                <span>❤️</span> 128
+                            </span>
+                        </div>
+                    </div>
                 </div>
-                <div class="chart-item">
-                    <h4>南曲了解途径</h4>
-                    <div id="chart5" class="chart-container"></div>
+
+                <!-- 作品卡片2 -->
+                <div class="work-card" data-type="video">
+                    <div class="work-image" style="background: linear-gradient(135deg, #4a7c23 0%, #3d661c 100%);">
+                        📹
+                        <span class="work-tag">短视频</span>
+                    </div>
+                    <div class="work-content">
+                        <h3 class="work-title">第一次学三弦</h3>
+                        <p class="work-author">👤 王先生</p>
+                        <p class="work-desc">跟着非遗传承人学习三弦，音色独特，学习过程充满乐趣。虽然刚开始很难，但在老师的耐心指导下，已经能弹奏简单的曲调了！</p>
+                        <div class="work-meta">
+                            <span class="work-date">2026-01-18</span>
+                            <span class="work-likes" onclick="toggleLike(this)">
+                                <span>❤️</span> 95
+                            </span>
+                        </div>
+                    </div>
                 </div>
-                <div class="chart-item">
-                    <h4>接触南曲的场景</h4>
-                    <div id="chart6" class="chart-container"></div>
+
+                <!-- 作品卡片3 -->
+                <div class="work-card" data-type="performance">
+                    <div class="work-image" style="background: linear-gradient(135deg, #8cc9a9 0%, #a8d5ba 100%);">
+                        🎤
+                        <span class="work-tag">演出记录</span>
+                    </div>
+                    <div class="work-content">
+                        <h3 class="work-title">校园南曲社团演出</h3>
+                        <p class="work-author">👤 小张</p>
+                        <p class="work-desc">我们学校的南曲社团在校园文化艺术节上演出，同学们的精彩演出展现了传承成果。台下掌声雷动，感受到了传统文化在校园里的生命力！</p>
+                        <div class="work-meta">
+                            <span class="work-date">2026-01-15</span>
+                            <span class="work-likes" onclick="toggleLike(this)">
+                                <span>❤️</span> 256
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 作品卡片4 -->
+                <div class="work-card" data-type="photo">
+                    <div class="work-image" style="background: linear-gradient(135deg, #d4a574 0%, #c9956c 100%);">
+                        🏛️
+                        <span class="work-tag">摄影作品</span>
+                    </div>
+                    <div class="work-content">
+                        <h3 class="work-title">非遗博物馆打卡</h3>
+                        <p class="work-author">👤 陈女士</p>
+                        <p class="work-desc">参观了五峰南曲非遗博物馆，深入了解南曲历史，收获满满。馆内陈列了许多珍贵的乐器、乐谱和历史照片，让人感受到这门艺术的深厚底蕴。</p>
+                        <div class="work-meta">
+                            <span class="work-date">2026-01-12</span>
+                            <span class="work-likes" onclick="toggleLike(this)">
+                                <span>❤️</span> 187
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 作品卡片5 -->
+                <div class="work-card" data-type="learning">
+                    <div class="work-image" style="background: linear-gradient(135deg, #b8860b 0%, #996600 100%);">
+                        📝
+                        <span class="work-tag">学习心得</span>
+                    </div>
+                    <div class="work-content">
+                        <h3 class="work-title">学习《春江花月夜》有感</h3>
+                        <p class="work-author">👤 赵同学</p>
+                        <p class="work-desc">通过本网站学习南曲，被这门艺术深深吸引。《春江花月夜》的旋律优美动听，唱词意境深远。传统文化需要我们年轻人去传承！</p>
+                        <div class="work-meta">
+                            <span class="work-date">2026-01-10</span>
+                            <span class="work-likes" onclick="toggleLike(this)">
+                                <span>❤️</span> 312
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 作品卡片6 -->
+                <div class="work-card" data-type="video">
+                    <div class="work-image" style="background: linear-gradient(135deg, #f4a460 0%, #d4a574 100%);">
+                        🎬
+                        <span class="work-tag">短视频</span>
+                    </div>
+                    <div class="work-content">
+                        <h3 class="work-title">非遗传承人访谈</h3>
+                        <p class="work-author">👤 媒体小组</p>
+                        <p class="work-desc">采访了南曲国家级非遗传承人，听他讲述南曲的传承故事。老一辈艺术家对传统文化的热爱和坚守令人敬佩！</p>
+                        <div class="work-meta">
+                            <span class="work-date">2026-01-08</span>
+                            <span class="work-likes" onclick="toggleLike(this)">
+                                <span>❤️</span> 423
+                            </span>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
 
+        <!-- 打卡活动 -->
         <div class="content-section">
-            <h2>三、核心痛点：双重断层叠加，三大困境凸显</h2>
-            <p class="content-text">传承危机的核心是人才与受众的双重断层。69.03%的受访者认为"艺人断层，无年轻传承人接棒"是首要问题，67.26%直指"受众老龄化，年轻人接受度低"，这两大问题成为制约南曲传承的核心瓶颈。而在民间传承层面，痛点更为具体：69.03%的人提及"无专业培训资源，技艺难以提升"，66.37%反映"缺乏固定排练/展演场地"，同等比例认为"爱好者群体老龄化，新鲜血液少"，技艺、场地、人才三大困境形成闭环制约。</p>
-            <p class="content-text">深度认知群体对危机的感知更为敏锐。"非常了解"南曲的受访者中，100%认可"艺人断层"问题，显著高于"一般了解"群体的65.45%，也印证了加强文化普及、让更多人感知传承压力的必要性。</p>
-            
-            <div class="chart-row">
-                <div class="chart-item">
-                    <h4>传承核心问题</h4>
-                    <div id="chart7" class="chart-container"></div>
+            <h2>🎯 打卡活动</h2>
+            <div class="image-gallery">
+                <div class="image-placeholder" style="background: linear-gradient(135deg, #d4a574 0%, #c9956c 100%);">
+                    <span class="placeholder-icon">📷</span>
+                    <h3 style="color: white; margin: 0.5rem 0; font-size: 1.2rem;">摄影大赛</h3>
+                    <p class="placeholder-text">捕捉南曲之美，赢取丰厚奖品</p>
                 </div>
-                <div class="chart-item">
-                    <h4>民间传承痛点</h4>
-                    <div id="chart8" class="chart-container"></div>
+                <div class="image-placeholder" style="background: linear-gradient(135deg, #b8860b 0%, #996600 100%);">
+                    <span class="placeholder-icon">🎤</span>
+                    <h3 style="color: white; margin: 0.5rem 0; font-size: 1.2rem;">短视频挑战</h3>
+                    <p class="placeholder-text">15秒展现你的南曲风采</p>
+                </div>
+                <div class="image-placeholder" style="background: linear-gradient(135deg, #4a7c23 0%, #5d9f2c 100%);">
+                    <span class="placeholder-icon">🎵</span>
+                    <h3 style="color: white; margin: 0.5rem 0; font-size: 1.2rem;">学唱挑战</h3>
+                    <p class="placeholder-text">学唱经典曲段，赢取认证证书</p>
                 </div>
             </div>
-        </div>
-
-        <div class="content-section">
-            <h2>四、破局信号：高参与意愿加持，创新路径清晰</h2>
-            <p class="content-text">困境之下，传承仍有较强群众基础与创新空间。超六成（61.06%）受访者愿意主动了解/学习南曲，七成以上（74.34%）愿意参与南曲相关活动，其中"亲子南曲展演"接受度最高（70.8%），唱腔/乐器体验课、故事分享会紧随其后，显示体验式、互动式活动更易激发参与热情。</p>
-            <p class="content-text">文旅融合与年轻化创新成为共识。80.53%的受访者支持南曲与本地旅游深度融合，景区固定展演、文创开发等形式获得广泛认可；在传播创新上，超六成受访者支持"改编年轻化唱段""打造南曲短视频/情景剧""直播平台展演"，为南曲对接年轻群体指明方向。而在支持需求上，64.6%的人认为需优先"组织专业培训，培育传承人/师资"，59.29%呼吁增加资金补贴与场地建设，诉求集中且明确。</p>
-            
-            <div class="chart-row">
-                <div class="chart-item">
-                    <h4>是否愿意尝试弹唱南曲</h4>
-                    <div id="chart9" class="chart-container"></div>
-                </div>
-                <div class="chart-item">
-                    <h4>如何创新南曲传播形式</h4>
-                    <div id="chart10" class="chart-container"></div>
-                </div>
-            </div>
-        </div>
-
-        <div class="content-section">
-            <h2>五、传承路径：构建"三维联动"活化体系</h2>
-            <p class="content-text">基于调研数据，五峰南曲的活化需聚焦"人才培育、传播创新、政策保障"三维发力。在人才层面，推动校园与民间联动，43.36%的受访者认可"邀请民间艺人进校园授课"，可通过建立常态化授课与同台展演机制，培育青少年传承人；在传播层面，发力新媒体破圈，针对18-30岁群体强化短视频、直播内容，同时依托景区场景深化文旅融合；在保障层面，落实专业培训、资金补贴与场地建设，破解民间传承的现实困境。</p>
-            
-            <div class="word-cloud-section">
-                <div class="chart-item">
-                    <h4>如何更好地实现校园传承与民间传承联动</h4>
-                    <div id="chart11" class="chart-container"></div>
-                </div>
-                <img src="../images/modules/module3/词云.jpg" alt="词云图" class="word-cloud-image" onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22500%22 height=%22300%22><rect width=%22100%25%22 height=%22100%25%22 fill=%22%23f4a460%22/><text x=%2250%25%22 y=%2250%25%22 text-anchor=%22middle%22 fill=%22white%22 font-size=%2220%22>图片加载失败</text></svg>'">
-            </div>
-            
-            <p class="content-text">从数据来看，五峰南曲的传承并非"无人问津"，而是需要搭建更精准的桥梁——让传统技艺对接年轻受众，让民间活力获得政策支撑，方能让这一土家族非遗瑰宝在新时代持续焕发新生。作为土家族先民智慧的结晶，五峰南曲的唱腔里藏着武陵山区的山水灵韵，唱词中载着土家儿女的生活百态，它不仅是一种曲艺形式，更是维系地域文化认同、传承民族精神的重要纽带。其传承之路，从来不是单一维度的"保护"，而是"活态"的创新与延续。未来，唯有以数据为导向，精准破解人才断层、传播滞后、保障不足等核心难题，让民间艺人有尊严、年轻群体有兴趣、传播形式有新意、政策支撑有力度，才能推动南曲从"博物馆里的非遗"走向"生活中的文化"。既要守住土家文化的本源底色，保留原汁原味的唱腔与内涵，也要主动拥抱时代变化，通过文旅融合让南曲成为五峰的文化名片，通过新媒体传播让更多人听见土家非遗的声音，通过校园与民间的联动让传承脉络生生不息。相信在多方合力之下，这门古老的土家族曲艺，终将在新时代的土壤中扎根生长，绽放出更持久的活力。</p>
         </div>
 
         <div class="page-nav">
-            <a href="page1.html" class="nav-btn">← 政策解读</a>
-            <a href="page3.html" class="nav-btn">民间心声 →</a>
+            <a href="page1.html" class="nav-btn">← 曲段学唱</a>
+            <a href="page3.html" class="nav-btn">在线问答 →</a>
         </div>
     </section>
 
@@ -213,261 +589,183 @@
     </footer>
 
     <script>
-        // 初始化所有图表
-        const colors = ['#4a7c23', '#f4a460', '#8cc9a9', '#c9956c', '#b8860b', '#d4a574', '#7bb898'];
+        // 上传功能
+        const uploadArea = document.getElementById('uploadArea');
+        const fileInput = document.getElementById('fileInput');
+        const filePreview = document.getElementById('filePreview');
+        const uploadForm = document.getElementById('uploadForm');
+        const uploadSuccess = document.getElementById('uploadSuccess');
+        const submitBtn = document.getElementById('submitBtn');
+        let selectedFiles = [];
 
-        // 图表1：年龄分布
-        const chart1 = echarts.init(document.getElementById('chart1'));
-        chart1.setOption({
-            tooltip: {trigger: 'item', formatter: '{b}: {c}%'},
-            legend: {orient: 'vertical', left: 'left', top: 'middle', textStyle: {fontSize: 11}},
-            series: [{
-                type: 'pie',
-                radius: ['40%', '70%'],
-                center: ['60%', '50%'],
-                data: [
-                    {value: 30.97, name: '18岁以下'},
-                    {value: 45.13, name: '19-30岁'},
-                    {value: 20.35, name: '31-45岁'},
-                    {value: 2.65, name: '46-60岁'},
-                    {value: 0.88, name: '61岁以上'}
-                ],
-                label: {formatter: '{c}%', fontSize: 11}
-            }]
+        // 点击上传
+        uploadArea.addEventListener('click', () => {
+            fileInput.click();
         });
 
-        // 图表2：居住地分布
-        const chart2 = echarts.init(document.getElementById('chart2'));
-        chart2.setOption({
-            tooltip: {trigger: 'item', formatter: '{b}: {c}%'},
-            legend: {orient: 'vertical', left: 'left', top: 'middle', textStyle: {fontSize: 11}},
-            series: [{
-                type: 'pie',
-                radius: ['40%', '70%'],
-                center: ['60%', '50%'],
-                data: [
-                    {value: 40.71, name: '五峰土家族自治县'},
-                    {value: 51.33, name: '宜昌市其他地区'},
-                    {value: 7.96, name: '湖北省内其他城市'},
-                    {value: 0, name: '湖北省外'}
-                ],
-                label: {formatter: '{c}%', fontSize: 11}
-            }]
+        // 文件选择
+        fileInput.addEventListener('change', (e) => {
+            handleFiles(e.target.files);
         });
 
-        // 图表3：受众了解程度
-        const chart3 = echarts.init(document.getElementById('chart3'));
-        chart3.setOption({
-            tooltip: {trigger: 'item', formatter: '{b}: {c}%'},
-            legend: {orient: 'vertical', left: 'left', top: 'middle', textStyle: {fontSize: 10}},
-            series: [{
-                type: 'pie',
-                radius: ['35%', '70%'],
-                center: ['60%', '50%'],
-                data: [
-                    {value: 2.65, name: '非常了解'},
-                    {value: 48.67, name: '一般了解'},
-                    {value: 48.67, name: '不太了解'},
-                    {value: 0, name: '完全不了解'}
-                ],
-                label: {formatter: '{c}%', fontSize: 11}
-            }]
+        // 拖拽上传
+        uploadArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadArea.classList.add('dragover');
         });
 
-        // 图表4：接触南曲的频率
-        const chart4 = echarts.init(document.getElementById('chart4'));
-        chart4.setOption({
-            tooltip: {trigger: 'axis', axisPointer: {type: 'shadow'}},
-            grid: {left: '15%', right: '5%', bottom: '3%', top: '10%', containLabel: true},
-            xAxis: {
-                type: 'value',
-                max: 50,
-                interval: 10,
-                name: '(%)'
-            },
-            yAxis: {
-                type: 'category',
-                data: ['经常', '偶尔', '极少', '从未'],
-                inverse: true
-            },
-            series: [{
-                type: 'bar',
-                data: [28.32, 46.9, 11.5, 13.27],
-                label: {show: true, position: 'right', formatter: '{c}%'}
-            }]
+        uploadArea.addEventListener('dragleave', () => {
+            uploadArea.classList.remove('dragover');
         });
 
-        // 图表5：南曲了解途径
-        const chart5 = echarts.init(document.getElementById('chart5'));
-        chart5.setOption({
-            tooltip: {trigger: 'axis', axisPointer: {type: 'shadow'}},
-            grid: {left: '22%', right: '5%', bottom: '3%', top: '10%', containLabel: true},
-            xAxis: {
-                type: 'value',
-                max: 75,
-                interval: 25,
-                name: '(%)'
-            },
-            yAxis: {
-                type: 'category',
-                data: ['校园课程', '民间展演', '景区宣传', '朋友介绍', '短视频', '电视报纸', '其他'],
-                inverse: true
-            },
-            series: [{
-                type: 'bar',
-                data: [60.18, 61.95, 73.22, 59.29, 28.23, 53.98, 0],
-                label: {show: true, position: 'right', formatter: '{c}%'}
-            }]
+        uploadArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadArea.classList.remove('dragover');
+            handleFiles(e.dataTransfer.files);
         });
 
-        // 图表6：接触南曲的场景
-        const chart6 = echarts.init(document.getElementById('chart6'));
-        chart6.setOption({
-            tooltip: {trigger: 'axis', axisPointer: {type: 'shadow'}},
-            grid: {left: '22%', right: '5%', bottom: '3%', top: '10%', containLabel: true},
-            xAxis: {
-                type: 'value',
-                max: 75,
-                interval: 25,
-                name: '(%)'
-            },
-            yAxis: {
-                type: 'category',
-                data: ['校园演出', '社区展演', '景区展演', '非遗节', '线上视频', '家庭聚会', '其他'],
-                inverse: true
-            },
-            series: [{
-                type: 'bar',
-                data: [70.41, 64.29, 56.12, 51.02, 56.12, 54.08, 0],
-                label: {show: true, position: 'right', formatter: '{c}%'}
-            }]
+        // 处理文件
+        function handleFiles(files) {
+            if (files.length > 0) {
+                selectedFiles = Array.from(files);
+                renderPreview();
+                uploadForm.classList.add('active');
+            }
+        }
+
+        // 渲染预览
+        function renderPreview() {
+            filePreview.innerHTML = '';
+            filePreview.classList.add('active');
+
+            selectedFiles.forEach((file, index) => {
+                const size = formatFileSize(file.size);
+                const icon = getFileIcon(file.type);
+
+                const previewItem = document.createElement('div');
+                previewItem.className = 'preview-item';
+                previewItem.innerHTML = `
+                    <span class="preview-icon">${icon}</span>
+                    <div class="preview-info">
+                        <div class="preview-name">${file.name}</div>
+                        <div class="preview-size">${size}</div>
+                    </div>
+                    <span class="preview-remove" onclick="removeFile(${index})">✕</span>
+                `;
+                filePreview.appendChild(previewItem);
+            });
+        }
+
+        // 格式化文件大小
+        function formatFileSize(bytes) {
+            if (bytes === 0) return '0 Bytes';
+            const k = 1024;
+            const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+        }
+
+        // 获取文件图标
+        function getFileIcon(type) {
+            if (type.includes('image')) return '📷';
+            if (type.includes('video')) return '📹';
+            return '📄';
+        }
+
+        // 移除文件
+        window.removeFile = function(index) {
+            selectedFiles.splice(index, 1);
+            renderPreview();
+
+            if (selectedFiles.length === 0) {
+                filePreview.classList.remove('active');
+                uploadForm.classList.remove('active');
+            }
+        };
+
+        // 提交表单
+        submitBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+
+            const title = document.getElementById('workTitle').value.trim();
+            const type = document.getElementById('workType').value;
+            const author = document.getElementById('authorName').value.trim();
+            const desc = document.getElementById('workDesc').value.trim();
+
+            // 简单验证
+            if (!title || !type || !author || !desc) {
+                alert('请填写所有必填项！');
+                return;
+            }
+
+            if (selectedFiles.length === 0) {
+                alert('请上传至少一个文件！');
+                return;
+            }
+
+            // 模拟上传
+            submitBtn.disabled = true;
+            submitBtn.textContent = '上传中...';
+
+            setTimeout(() => {
+                uploadForm.classList.remove('active');
+                uploadSuccess.classList.add('active');
+
+                // 重置表单
+                submitBtn.disabled = false;
+                submitBtn.textContent = '提交作品';
+                selectedFiles = [];
+                fileInput.value = '';
+                document.getElementById('workTitle').value = '';
+                document.getElementById('workType').value = '';
+                document.getElementById('authorName').value = '';
+                document.getElementById('workDesc').value = '';
+                document.getElementById('contact').value = '';
+                filePreview.classList.remove('active');
+
+                // 3秒后隐藏成功提示
+                setTimeout(() => {
+                    uploadSuccess.classList.remove('active');
+                }, 3000);
+            }, 1500);
         });
 
-        // 图表7：传承核心问题
-        const chart7 = echarts.init(document.getElementById('chart7'));
-        chart7.setOption({
-            tooltip: {trigger: 'item', formatter: '{b}: {c}%'},
-            legend: {orient: 'vertical', left: 'left', top: 'middle', textStyle: {fontSize: 10}},
-            series: [{
-                type: 'pie',
-                radius: ['35%', '70%'],
-                center: ['60%', '50%'],
-                data: [
-                    {value: 67.26, name: '受众老龄化'},
-                    {value: 69.03, name: '艺人断层'},
-                    {value: 61.95, name: '展演平台少'},
-                    {value: 57.52, name: '缺乏资金'},
-                    {value: 48.67, name: '传播陈旧'},
-                    {value: 61.06, name: '商业价值低'},
-                    {value: 48.67, name: '教学资源匮乏'}
-                ],
-                label: {formatter: '{c}%', fontSize: 10}
-            }]
+        // 筛选功能
+        const filterBtns = document.querySelectorAll('.filter-btn');
+        const workCards = document.querySelectorAll('.work-card');
+
+        filterBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                // 移除所有激活状态
+                filterBtns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+
+                const filter = btn.dataset.filter;
+
+                workCards.forEach(card => {
+                    if (filter === 'all' || card.dataset.type === filter) {
+                        card.style.display = 'block';
+                        card.style.animation = 'fadeIn 0.5s';
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
+            });
         });
 
-        // 图表8：民间传承痛点
-        const chart8 = echarts.init(document.getElementById('chart8'));
-        chart8.setOption({
-            tooltip: {trigger: 'item', formatter: '{b}: {c}%'},
-            legend: {orient: 'vertical', left: 'left', top: 'middle', textStyle: {fontSize: 10}},
-            series: [{
-                type: 'pie',
-                radius: ['35%', '70%'],
-                center: ['60%', '50%'],
-                data: [
-                    {value: 66.37, name: '缺乏场地'},
-                    {value: 69.03, name: '无培训资源'},
-                    {value: 57.52, name: '无资金'},
-                    {value: 66.37, name: '群体老化'},
-                    {value: 44.25, name: '无官方平台'},
-                    {value: 0, name: '其他'}
-                ],
-                label: {formatter: '{c}%', fontSize: 10}
-            }]
-        });
-
-        // 图表9：是否愿意尝试弹唱南曲
-        const chart9 = echarts.init(document.getElementById('chart9'));
-        chart9.setOption({
-            tooltip: {trigger: 'axis', axisPointer: {type: 'shadow'}},
-            grid: {left: '12%', right: '5%', bottom: '8%', top: '10%', containLabel: true},
-            xAxis: {
-                type: 'category',
-                data: ['非常意愿', '愿意尝试', '无所谓', '不愿意']
-            },
-            yAxis: {
-                type: 'value',
-                max: 40,
-                interval: 10,
-                name: '(%)'
-            },
-            series: [{
-                type: 'bar',
-                data: [25.66, 35.4, 23.89, 15.04],
-                label: {show: true, position: 'top', formatter: '{c}%'}
-            }]
-        });
-
-        // 图表10：如何创新南曲传播形式
-        const chart10 = echarts.init(document.getElementById('chart10'));
-        chart10.setOption({
-            tooltip: {trigger: 'axis', axisPointer: {type: 'shadow'}},
-            grid: {left: '25%', right: '5%', bottom: '3%', top: '10%', containLabel: true},
-            xAxis: {
-                type: 'value',
-                max: 65,
-                interval: 20,
-                name: '(%)'
-            },
-            yAxis: {
-                type: 'category',
-                data: ['年轻化唱段', '短视频剧', '直播展演', '文创产品', '校园结合', '其他'],
-                inverse: true
-            },
-            series: [{
-                type: 'bar',
-                data: [63.72, 63.72, 62.83, 46.9, 54.87, 0],
-                label: {show: true, position: 'right', formatter: '{c}%'}
-            }]
-        });
-
-        // 图表11：校园传承与民间传承联动
-        const chart11 = echarts.init(document.getElementById('chart11'));
-        chart11.setOption({
-            tooltip: {trigger: 'axis', axisPointer: {type: 'shadow'}},
-            grid: {left: '22%', right: '5%', bottom: '3%', top: '10%', containLabel: true},
-            xAxis: {
-                type: 'value',
-                max: 45,
-                interval: 15,
-                name: '(%)'
-            },
-            yAxis: {
-                type: 'category',
-                data: ['同台表演', '艺人进校园', '社区表演', '编写教材', '其他'],
-                inverse: true
-            },
-            series: [{
-                type: 'bar',
-                data: [38.49, 43.36, 13.27, 3.54, 0.88],
-                label: {show: true, position: 'right', formatter: '{c}%'}
-            }]
-        });
-
-        // 响应式调整
-        window.addEventListener('resize', function() {
-            chart1.resize();
-            chart2.resize();
-            chart3.resize();
-            chart4.resize();
-            chart5.resize();
-            chart6.resize();
-            chart7.resize();
-            chart8.resize();
-            chart9.resize();
-            chart10.resize();
-            chart11.resize();
-        });
+        // 点赞功能
+        window.toggleLike = function(element) {
+            const isLiked = element.classList.contains('liked');
+            const count = parseInt(element.textContent.trim());
+            
+            if (isLiked) {
+                element.classList.remove('liked');
+                element.innerHTML = `<span>❤️</span> ${count - 1}`;
+            } else {
+                element.classList.add('liked');
+                element.innerHTML = `<span>❤️</span> ${count + 1}`;
+            }
+        };
     </script>
 </body>
 </html>
