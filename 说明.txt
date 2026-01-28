@@ -1,0 +1,8 @@
+"音视频素材文件夹结构创建完成"  
+""  
+"文件夹结构："  
+"- media/audio/background/    背景音乐"  
+"- media/audio/performance/   演奏音频"  
+"- media/video/background/     背景视频"  
+"- media/video/performance/   演奏视频"  
+"- media/video/tutorial/      教学视频" 
