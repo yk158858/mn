@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>图片占位符生成器</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "Microsoft YaHei", "微软雅黑", Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 2rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            padding: 3rem;
+            max-width: 1200px;
+            width: 100%;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        h1 {
+            text-align: center;
+            color: #667eea;
+            margin-bottom: 2rem;
+            font-size: 2rem;
+        }
+
+        .generator-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .placeholder-card {
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            padding: 1.5rem;
+            text-align: center;
+            transition: all 0.3s;
+        }
+
+        .placeholder-card:hover {
+            border-color: #667eea;
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.2);
+        }
+
+        .placeholder-preview {
+            width: 100%;
+            height: 200px;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: #666;
+        }
+
+        .placeholder-preview .size {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .placeholder-preview .label {
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+        }
+
+        .placeholder-title {
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 0.5rem;
+        }
+
+        .placeholder-desc {
+            color: #666;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+
+        .download-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 0.8rem 2rem;
+            border-radius: 25px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 1rem;
+        }
+
+        .download-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .info {
+            background: #f0f4ff;
+            padding: 1.5rem;
+            border-radius: 10px;
+            margin-top: 2rem;
+            border-left: 4px solid #667eea;
+        }
+
+        .info h3 {
+            color: #667eea;
+            margin-bottom: 0.5rem;
+        }
+
+        .info p {
+            color: #666;
+            line-height: 1.6;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🖼️ 南曲图片占位符生成器</h1>
+
+        <div class="generator-grid">
+            <!-- 首页横幅 -->
+            <div class="placeholder-card">
+                <canvas id="hero-bg" width="1920" height="1080"></canvas>
+                <div class="placeholder-preview">
+                    <div class="size">1920x1080</div>
+                    <div class="label">首页背景图</div>
+                </div>
+                <div class="placeholder-title">首页横幅背景</div>
+                <div class="placeholder-desc">用于网站首页横幅区域</div>
+                <button class="download-btn" onclick="downloadCanvas('hero-bg', 'hero-bg.jpg')">下载</button>
+            </div>
+
+            <!-- 模块卡片 -->
+            <div class="placeholder-card">
+                <canvas id="module-card" width="800" height="600"></canvas>
+                <div class="placeholder-preview">
+                    <div class="size">800x600</div>
+                    <div class="label">模块卡片图</div>
+                </div>
+                <div class="placeholder-title">模块卡片图片</div>
+                <div class="placeholder-desc">用于四个模块的卡片展示</div>
+                <button class="download-btn" onclick="downloadCanvas('module-card', 'module-card.jpg')">下载</button>
+            </div>
+
+            <!-- 页面横幅 -->
+            <div class="placeholder-card">
+                <canvas id="page-banner" width="1920" height="400"></canvas>
+                <div class="placeholder-preview">
+                    <div class="size">1920x400</div>
+                    <div class="label">页面横幅</div>
+                </div>
+                <div class="placeholder-title">页面横幅图</div>
+                <div class="placeholder-desc">用于子页面顶部横幅</div>
+                <button class="download-btn" onclick="downloadCanvas('page-banner', 'page-banner.jpg')">下载</button>
+            </div>
+
+            <!-- 内容图片大图 -->
+            <div class="placeholder-card">
+                <canvas id="content-large" width="1200" height="800"></canvas>
+                <div class="placeholder-preview">
+                    <div class="size">1200x800</div>
+                    <div class="label">内容大图</div>
+                </div>
+                <div class="placeholder-title">内容大图</div>
+                <div class="placeholder-desc">用于内容页面的大图展示</div>
+                <button class="download-btn" onclick="downloadCanvas('content-large', 'content-large.jpg')">下载</button>
+            </div>
+
+            <!-- 内容图片中图 -->
+            <div class="placeholder-card">
+                <canvas id="content-medium" width="800" height="600"></canvas>
+                <div class="placeholder-preview">
+                    <div class="size">800x600</div>
+                    <div class="label">内容中图</div>
+                </div>
+                <div class="placeholder-title">内容中图</div>
+                <div class="placeholder-desc">用于内容页面的中等尺寸图片</div>
+                <button class="download-btn" onclick="downloadCanvas('content-medium', 'content-medium.jpg')">下载</button>
+            </div>
+
+            <!-- 缩略图 -->
+            <div class="placeholder-card">
+                <canvas id="thumbnail" width="400" height="300"></canvas>
+                <div class="placeholder-preview">
+                    <div class="size">400x300</div>
+                    <div class="label">缩略图</div>
+                </div>
+                <div class="placeholder-title">缩略图</div>
+                <div class="placeholder-desc">用于缩略图和列表展示</div>
+                <button class="download-btn" onclick="downloadCanvas('thumbnail', 'thumbnail.jpg')">下载</button>
+            </div>
+        </div>
+
+        <div class="info">
+            <h3>💡 使用说明</h3>
+            <p>
+                点击"下载"按钮可以下载生成的占位符图片。这些图片使用渐变色和文字标注，
+                可以在开发阶段临时使用。请在正式上线时替换为真实的图片素材。
+                所有图片都按照南曲网站的设计规范制作，确保视觉一致性。
+            </p>
+        </div>
+    </div>
+
+    <script>
+        // 绘制占位符图片
+        function drawPlaceholder(canvasId, width, height, gradient, text, subtext) {
+            const canvas = document.getElementById(canvasId);
+            const ctx = canvas.getContext('2d');
+
+            // 绘制渐变背景
+            const grd = ctx.createLinearGradient(0, 0, width, height);
+            gradient.colors.forEach((color, index) => {
+                grd.addColorStop(index / (gradient.colors.length - 1), color);
+            });
+            ctx.fillStyle = grd;
+            ctx.fillRect(0, 0, width, height);
+
+            // 绘制装饰线条
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.3)';
+            ctx.lineWidth = 2;
+            for (let i = 0; i < 5; i++) {
+                ctx.beginPath();
+                ctx.moveTo(0, height * (i + 1) / 6);
+                ctx.lineTo(width, height * (i + 1) / 6);
+                ctx.stroke();
+            }
+
+            // 绘制中心文字
+            ctx.fillStyle = 'white';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.font = `bold ${width * 0.08}px "Microsoft YaHei"`;
+            ctx.fillText(text, width / 2, height / 2 - 20);
+
+            // 绘制尺寸文字
+            ctx.font = `${width * 0.05}px "Microsoft YaHei"`;
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.9)';
+            ctx.fillText(subtext, width / 2, height / 2 + 30);
+
+            // 绘制边框
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.5)';
+            ctx.lineWidth = 4;
+            ctx.strokeRect(20, 20, width - 40, height - 40);
+
+            // 绘制角落装饰
+            const cornerSize = 30;
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.8)';
+            ctx.lineWidth = 6;
+
+            // 左上角
+            ctx.beginPath();
+            ctx.moveTo(30, cornerSize + 20);
+            ctx.lineTo(30, 30);
+            ctx.lineTo(cornerSize + 20, 30);
+            ctx.stroke();
+
+            // 右上角
+            ctx.beginPath();
+            ctx.moveTo(width - 30 - cornerSize, 30);
+            ctx.lineTo(width - 30, 30);
+            ctx.lineTo(width - 30, cornerSize + 20);
+            ctx.stroke();
+
+            // 左下角
+            ctx.beginPath();
+            ctx.moveTo(30, height - 30 - cornerSize);
+            ctx.lineTo(30, height - 30);
+            ctx.lineTo(cornerSize + 20, height - 30);
+            ctx.stroke();
+
+            // 右下角
+            ctx.beginPath();
+            ctx.moveTo(width - 30 - cornerSize, height - 30);
+            ctx.lineTo(width - 30, height - 30);
+            ctx.lineTo(width - 30, height - 30 - cornerSize);
+            ctx.stroke();
+        }
+
+        // 下载画布内容
+        function downloadCanvas(canvasId, filename) {
+            const canvas = document.getElementById(canvasId);
+            const link = document.createElement('a');
+            link.download = filename;
+            link.href = canvas.toDataURL('image/jpeg', 0.9);
+            link.click();
+        }
+
+        // 初始化所有占位符
+        window.onload = function() {
+            // 首页横幅
+            drawPlaceholder('hero-bg', 1920, 1080, {
+                colors: ['#2d5016', '#4a7c23']
+            }, '五峰南曲', '1920x1080');
+
+            // 模块卡片
+            drawPlaceholder('module-card', 800, 600, {
+                colors: ['#f4a460', '#e69546']
+            }, '模块图片', '800x600');
+
+            // 页面横幅
+            drawPlaceholder('page-banner', 1920, 400, {
+                colors: ['#8cc9a9', '#a8d5ba']
+            }, '页面横幅', '1920x400');
+
+            // 内容大图
+            drawPlaceholder('content-large', 1200, 800, {
+                colors: ['#d4a574', '#c9956c']
+            }, '内容图片', '1200x800');
+
+            // 内容中图
+            drawPlaceholder('content-medium', 800, 600, {
+                colors: ['#b8860b', '#996600']
+            }, '内容图片', '800x600');
+
+            // 缩略图
+            drawPlaceholder('thumbnail', 400, 300, {
+                colors: ['#4a7c23', '#5d9f2c']
+            }, '缩略图', '400x300');
+        };
+    </script>
+</body>
+</html>

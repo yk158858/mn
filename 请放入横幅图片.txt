@@ -1,0 +1,1 @@
+"将横幅.jpg文件放到这里：d:/projects/南曲/images/hero/横幅.jpg" 
