@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>图标占位符生成器</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "Microsoft YaHei", "微软雅黑", Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 2rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            padding: 3rem;
+            max-width: 1200px;
+            width: 100%;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        h1 {
+            text-align: center;
+            color: #667eea;
+            margin-bottom: 2rem;
+            font-size: 2rem;
+        }
+
+        .icons-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .icon-card {
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            padding: 2rem;
+            text-align: center;
+            transition: all 0.3s;
+        }
+
+        .icon-card:hover {
+            border-color: #667eea;
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.2);
+        }
+
+        .icon-canvas-container {
+            width: 128px;
+            height: 128px;
+            margin: 0 auto 1rem;
+            border-radius: 12px;
+            overflow: hidden;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .icon-title {
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 0.5rem;
+        }
+
+        .icon-desc {
+            color: #666;
+            font-size: 0.85rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .download-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 0.6rem 1.5rem;
+            border-radius: 20px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 0.9rem;
+        }
+
+        .download-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .info {
+            background: #f0f4ff;
+            padding: 1.5rem;
+            border-radius: 10px;
+            margin-top: 2rem;
+            border-left: 4px solid #667eea;
+        }
+
+        .info h3 {
+            color: #667eea;
+            margin-bottom: 0.5rem;
+        }
+
+        .info p {
+            color: #666;
+            line-height: 1.6;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎨 模块图标生成器</h1>
+
+        <div class="icons-grid">
+            <!-- 卷.png -->
+            <div class="icon-card">
+                <div class="icon-canvas-container">
+                    <canvas id="scroll-icon" width="128" height="128"></canvas>
+                </div>
+                <div class="icon-title">卷.png</div>
+                <div class="icon-desc">丝弦溯古 - 古卷轴图标</div>
+                <button class="download-btn" onclick="downloadIcon('scroll-icon', '卷.png')">下载</button>
+            </div>
+
+            <!-- 三弦.png -->
+            <div class="icon-card">
+                <div class="icon-canvas-container">
+                    <canvas id="sanxian-icon" width="128" height="128"></canvas>
+                </div>
+                <div class="icon-title">三弦.png</div>
+                <div class="icon-desc">现代弦歌 - 三弦乐器图标</div>
+                <button class="download-btn" onclick="downloadIcon('sanxian-icon', '三弦.png')">下载</button>
+            </div>
+
+            <!-- 文件.png -->
+            <div class="icon-card">
+                <div class="icon-canvas-container">
+                    <canvas id="file-icon" width="128" height="128"></canvas>
+                </div>
+                <div class="icon-title">文件.png</div>
+                <div class="icon-desc">雅韵思辨 - 文档文件图标</div>
+                <button class="download-btn" onclick="downloadIcon('file-icon', '文件.png')">下载</button>
+            </div>
+
+            <!-- 评论.png -->
+            <div class="icon-card">
+                <div class="icon-canvas-container">
+                    <canvas id="comment-icon" width="128" height="128"></canvas>
+                </div>
+                <div class="icon-title">评论.png</div>
+                <div class="icon-desc">弦音互动 - 对话气泡图标</div>
+                <button class="download-btn" onclick="downloadIcon('comment-icon', '评论.png')">下载</button>
+            </div>
+        </div>
+
+        <div class="info">
+            <h3>💡 使用说明</h3>
+            <p>
+                点击"下载"按钮可以生成的PNG格式的占位符图标。
+                这些图标使用Canvas绘制，带有透明背景，可以直接在网站上使用。
+                建议在正式上线时替换为设计师制作的精美图标。
+            </p>
+        </div>
+    </div>
+
+    <script>
+        // 绘制卷轴图标
+        function drawScrollIcon(ctx) {
+            // 背景：透明
+            ctx.clearRect(0, 0, 128, 128);
+
+            // 卷轴主体
+            ctx.fillStyle = '#8B4513';
+            ctx.fillRect(20, 30, 88, 68);
+
+            // 左卷轴头
+            ctx.fillStyle = '#D2691E';
+            ctx.beginPath();
+            ctx.arc(20, 64, 20, 0, Math.PI * 2);
+            ctx.fill();
+
+            // 右卷轴头
+            ctx.beginPath();
+            ctx.arc(108, 64, 20, 0, Math.PI * 2);
+            ctx.fill();
+
+            // 卷轴装饰线
+            ctx.strokeStyle = '#F5DEB3';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.moveTo(30, 40);
+            ctx.lineTo(98, 40);
+            ctx.moveTo(30, 88);
+            ctx.lineTo(98, 88);
+            ctx.stroke();
+
+            // 中间文字区域
+            ctx.fillStyle = '#FFF8DC';
+            ctx.fillRect(30, 45, 68, 38);
+        }
+
+        // 绘制三弦图标
+        function drawSanxianIcon(ctx) {
+            ctx.clearRect(0, 0, 128, 128);
+
+            // 琴身
+            ctx.fillStyle = '#8B4513';
+            ctx.fillRect(50, 20, 28, 88);
+
+            // 琴头
+            ctx.fillStyle = '#D2691E';
+            ctx.fillRect(55, 10, 18, 15);
+
+            // 三根弦
+            ctx.strokeStyle = '#FFD700';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.moveTo(58, 25);
+            ctx.lineTo(58, 105);
+            ctx.moveTo(64, 25);
+            ctx.lineTo(64, 105);
+            ctx.moveTo(70, 25);
+            ctx.lineTo(70, 105);
+            ctx.stroke();
+
+            // 琴轴
+            ctx.fillStyle = '#654321';
+            ctx.fillRect(45, 25, 4, 75);
+
+            // 装饰
+            ctx.fillStyle = '#FFD700';
+            ctx.fillRect(54, 95, 20, 4);
+        }
+
+        // 绘制文件图标
+        function drawFileIcon(ctx) {
+            ctx.clearRect(0, 0, 128, 128);
+
+            // 文件主体
+            ctx.fillStyle = '#4a7c23';
+            ctx.beginPath();
+            ctx.moveTo(30, 20);
+            ctx.lineTo(90, 20);
+            ctx.lineTo(98, 28);
+            ctx.lineTo(98, 108);
+            ctx.lineTo(30, 108);
+            ctx.closePath();
+            ctx.fill();
+
+            // 文件折角
+            ctx.fillStyle = '#3d661c';
+            ctx.beginPath();
+            ctx.moveTo(90, 20);
+            ctx.lineTo(90, 28);
+            ctx.lineTo(98, 28);
+            ctx.closePath();
+            ctx.fill();
+
+            // 文件内容线
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.3)';
+            ctx.fillRect(40, 40, 48, 3);
+            ctx.fillRect(40, 55, 48, 3);
+            ctx.fillRect(40, 70, 35, 3);
+            ctx.fillRect(40, 85, 48, 3);
+        }
+
+        // 绘制评论图标
+        function drawCommentIcon(ctx) {
+            ctx.clearRect(0, 0, 128, 128);
+
+            // 对话框主体
+            ctx.fillStyle = '#f4a460';
+            ctx.beginPath();
+            ctx.moveTo(20, 30);
+            ctx.lineTo(108, 30);
+            ctx.lineTo(108, 90);
+            ctx.lineTo(50, 90);
+            ctx.lineTo(35, 105);
+            ctx.lineTo(35, 90);
+            ctx.lineTo(20, 90);
+            ctx.closePath();
+            ctx.fill();
+
+            // 对话框尾巴
+            ctx.beginPath();
+            ctx.moveTo(35, 90);
+            ctx.lineTo(50, 90);
+            ctx.lineTo(35, 105);
+            ctx.closePath();
+            ctx.fill();
+
+            // 文字线
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.6)';
+            ctx.fillRect(35, 45, 58, 4);
+            ctx.fillRect(35, 58, 50, 4);
+            ctx.fillRect(35, 71, 55, 4);
+        }
+
+        // 下载图标
+        function downloadIcon(canvasId, filename) {
+            const canvas = document.getElementById(canvasId);
+            const link = document.createElement('a');
+            link.download = filename;
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+        }
+
+        // 初始化所有图标
+        window.onload = function() {
+            // 卷轴图标
+            const scrollCtx = document.getElementById('scroll-icon').getContext('2d');
+            drawScrollIcon(scrollCtx);
+
+            // 三弦图标
+            const sanxianCtx = document.getElementById('sanxian-icon').getContext('2d');
+            drawSanxianIcon(sanxianCtx);
+
+            // 文件图标
+            const fileCtx = document.getElementById('file-icon').getContext('2d');
+            drawFileIcon(fileCtx);
+
+            // 评论图标
+            const commentCtx = document.getElementById('comment-icon').getContext('2d');
+            drawCommentIcon(commentCtx);
+        };
+    </script>
+</body>
+</html>
