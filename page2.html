@@ -3,8 +3,80 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>文旅共生 - 现代弦歌 - 南曲非遗文化专题</title>
+    <title>数据透视 - 雅韵思辨 - 南曲非遗文化专题</title>
     <link rel="stylesheet" href="../css/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
+    <style>
+        .chart-container {
+            width: 100%;
+            min-width: 280px;
+            height: 320px;
+            margin: 0;
+        }
+        .chart-row {
+            display: flex;
+            gap: 1rem;
+            margin: 2rem 0;
+            flex-wrap: nowrap;
+        }
+        .chart-row.three-items {
+            flex-wrap: nowrap;
+        }
+        .chart-item {
+            flex: 1;
+            min-width: 280px;
+            background: white;
+            padding: 1rem;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
+        .chart-item h4 {
+            color: #2d5016;
+            text-align: center;
+            margin-bottom: 0.3rem;
+            font-size: 1rem;
+        }
+        .word-cloud-section {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+        .word-cloud-section .chart-item {
+            flex: 1;
+        }
+        .word-cloud-image {
+            width: 100%;
+            max-width: 450px;
+            height: auto;
+            border-radius: 10px;
+        }
+        .intro-text {
+            background: linear-gradient(135deg, #f4a460 0%, #e69546 100%);
+            color: white;
+            padding: 2rem;
+            border-radius: 15px;
+            margin-bottom: 2rem;
+            line-height: 1.8;
+        }
+        .content-text {
+            color: #555;
+            line-height: 1.8;
+            margin-bottom: 1.5rem;
+            text-align: justify;
+        }
+        @media (max-width: 1200px) {
+            .chart-row {
+                flex-wrap: wrap;
+            }
+            .word-cloud-section {
+                flex-direction: column;
+            }
+            .word-cloud-image {
+                max-width: 100%;
+            }
+        }
+    </style>
 </head>
 <body>
     <!-- 导航栏 -->
@@ -16,8 +88,8 @@
         <div class="nav-menu">
             <a href="../../南曲/index.html">首页</a>
             <a href="../module1/index.html">丝弦溯古</a>
-            <a href="index.html" class="active">现代弦歌</a>
-            <a href="../module3/index.html">雅韵思辨</a>
+            <a href="../module2/index.html">现代弦歌</a>
+            <a href="index.html" class="active">雅韵思辨</a>
             <a href="../module4/index.html">弦音互动</a>
         </div>
     </nav>
@@ -25,98 +97,111 @@
     <!-- 面包屑导航 -->
     <div class="breadcrumb">
         <a href="../../index.html">首页</a> > 
-        <a href="index.html">现代弦歌</a> > 
-        <span>文旅共生</span>
+        <a href="index.html">雅韵思辨</a> > 
+        <span>数据透视</span>
     </div>
 
     <!-- 页面内容 -->
     <section class="page-content">
-        <h1>文旅共生</h1>
-        <div class="page-intro">
-            <p>报道南曲与五峰山水旅游的深度融合实践,解读"非遗+旅游"的融合发展模式。</p>
+        <h1>数据透视</h1>
+        <div class="intro-text">
+            <p>作为土家族珍贵的非遗瑰宝，五峰南曲承载着地域文化记忆与民族艺术基因。为摸清其当代传承脉络，本次线上调研回收有效问卷113份，覆盖宜昌及五峰本地各年龄段、不同身份群体，数据背后既显传承根基，亦暴露发展痛点，为这一古老艺术的活化之路提供了精准参照。</p>
         </div>
 
         <div class="content-section">
-            <h2>景区演出场景</h2>
-            <div class="image-gallery">
-                <div class="image-card">
-                    <img src="../images/modules/module2/文旅共生1.jpg" alt="柴埠溪大峡谷演出" onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22400%22 height=%22300%22><rect width=%22100%25%22 height=%22100%25%22 fill=%22%23a8d5ba%22/><text x=%2250%25%22 y=%2250%25%22 text-anchor=%22middle%22 fill=%22white%22 font-size=%2220%22>图片加载失败</text></svg>'">
-                    <div class="image-caption">
-                        <h3>柴埠溪大峡谷每日定时演出</h3>
-                        <p class="source">游客可近距离欣赏南曲艺术</p>
-                    </div>
+            <h2>一、认知画像：九成受众停留在基础层面，本地群体认知更深</h2>
+            <p class="content-text">调研显示，五峰南曲的认知度呈现"广而不深"的特征。仅2.65%的受访者能"非常了解"其唱腔、唱词及文化内涵，48.67%为"一般了解"（知晓是本地非遗、听过片段），另有48.67%仅"听过名称"，深度认知群体极度稀缺。</p>
+            <p class="content-text">地域与居住时长成为认知度的关键影响因素。户籍为五峰县内的受访者中，"非常了解"者占比66.67%，显著高于宜昌市其他区县及省内其他城市群体；长期居住者对南曲的了解程度普遍高于居住时长较短者，其中"非常了解"群体中66.67%为长期居住人口，印证了本土文化浸润对认知的提升作用。而从年龄维度看，19-30岁群体占调研样本的45.13%，成为核心受访群体，但该群体认知深度并未同步领先，年轻群体的文化渗透仍需加强。</p>
+            
+            <div class="chart-row three-items">
+                <div class="chart-item">
+                    <h4>年龄分布</h4>
+                    <div id="chart1" class="chart-container"></div>
                 </div>
-                <div class="image-card">
-                    <img src="../images/modules/module2/文旅共生2.jpg" alt="青岗岭景区演出" onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22400%22 height=%22300%22><rect width=%22100%25%22 height=%22100%25%22 fill=%22%23c9a86c%22/><text x=%2250%25%22 y=%2250%25%22 text-anchor=%22middle%22 fill=%22white%22 font-size=%2220%22>图片加载失败</text></svg>'">
-                    <div class="image-caption">
-                        <h3>青岗岭景区结合山水风光</h3>
-                        <p class="source">打造沉浸式南曲体验</p>
-                    </div>
+                <div class="chart-item">
+                    <h4>居住地分布</h4>
+                    <div id="chart2" class="chart-container"></div>
                 </div>
-                <div class="image-card">
-                    <img src="../images/modules/module2/文旅共生3.jpg" alt="古镇街巷演出" onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22400%22 height=%22300%22><rect width=%22100%25%22 height=%22100%25%22 fill=%22%23d4a574%22/><text x=%2250%25%22 y=%2250%25%22 text-anchor=%22middle%22 fill=%22white%22 font-size=%2220%22>图片加载失败</text></svg>'">
-                    <div class="image-caption">
-                        <h3>古镇街巷流动演出</h3>
-                        <p class="source">增添文化氛围</p>
-                    </div>
+                <div class="chart-item">
+                    <h4>受众了解程度</h4>
+                    <div id="chart3" class="chart-container"></div>
                 </div>
             </div>
         </div>
 
         <div class="content-section">
-            <h2>融合发展模式</h2>
-            <div class="timeline">
-                <div class="timeline-item">
-                    <div class="timeline-date">第一步</div>
-                    <div class="timeline-content">
-                        <h4>非遗保护</h4>
-                        <p>建立保护传承体系,培养传承人才</p>
-                    </div>
+            <h2>二、传播困境：传统路径主导，线上渗透率不足三成</h2>
+            <p class="content-text">在信息传播多元化的当下，五峰南曲的传播渠道仍局限于传统场景。数据显示，75.22%的受访者通过"景区宣传/文旅推广"了解南曲，成为首要途径，而短视频、直播等新媒体渠道的渗透率仅28.32%，与年轻群体信息获取习惯严重脱节。</p>
+            <p class="content-text">接触频率同样反映出传播短板：46.9%的受访者"偶尔"接触（每年数次），28.32%能"经常"接触（每月1次及以上），但仍有13.27%"从未接触"、11.5%"极少接触"，近四分之一人群的文化触达存在空白。值得关注的是，31-45岁群体"从未接触"比例高达26.09%，成为触达薄弱的关键年龄段，而18岁及以下群体"经常"接触比例达34.29%，校园场景的传播效能初步显现——70.41%的受访者通过"校园演出/课堂"接触南曲，成为核心接触场景。</p>
+            
+            <div class="chart-row three-items">
+                <div class="chart-item">
+                    <h4>接触南曲的频率</h4>
+                    <div id="chart4" class="chart-container"></div>
                 </div>
-                <div class="timeline-item">
-                    <div class="timeline-date">第二步</div>
-                    <div class="timeline-content">
-                        <h4>旅游融合</h4>
-                        <p>将南曲融入旅游线路和景区活动</p>
-                    </div>
+                <div class="chart-item">
+                    <h4>南曲了解途径</h4>
+                    <div id="chart5" class="chart-container"></div>
                 </div>
-                <div class="timeline-item">
-                    <div class="timeline-date">第三步</div>
-                    <div class="timeline-content">
-                        <h4>文化传播</h4>
-                        <p>通过旅游扩大南曲影响力</p>
-                    </div>
-                </div>
-                <div class="timeline-item">
-                    <div class="timeline-date">第四步</div>
-                    <div class="timeline-content">
-                        <h4>经济共赢</h4>
-                        <p>促进旅游收入,反哺非遗传承</p>
-                    </div>
+                <div class="chart-item">
+                    <h4>接触南曲的场景</h4>
+                    <div id="chart6" class="chart-container"></div>
                 </div>
             </div>
         </div>
 
-
-
         <div class="content-section">
-            <h2>新闻评论</h2>
-            <div class="video-list">
-                <div class="video-card">
-                    <video controls preload="metadata" poster="../images/modules/module2/文旅共生新闻评论封面.jpg">
-                        <source src="../media/video/performance/文旅共生新闻评论.mp4" type="video/mp4">
-                        您的浏览器不支持视频播放
-                    </video>
-                    <div class="video-caption">
-                        <h4>文旅共生新闻评论</h4>
-                    </div>
+            <h2>三、核心痛点：双重断层叠加，三大困境凸显</h2>
+            <p class="content-text">传承危机的核心是人才与受众的双重断层。69.03%的受访者认为"艺人断层，无年轻传承人接棒"是首要问题，67.26%直指"受众老龄化，年轻人接受度低"，这两大问题成为制约南曲传承的核心瓶颈。而在民间传承层面，痛点更为具体：69.03%的人提及"无专业培训资源，技艺难以提升"，66.37%反映"缺乏固定排练/展演场地"，同等比例认为"爱好者群体老龄化，新鲜血液少"，技艺、场地、人才三大困境形成闭环制约。</p>
+            <p class="content-text">深度认知群体对危机的感知更为敏锐。"非常了解"南曲的受访者中，100%认可"艺人断层"问题，显著高于"一般了解"群体的65.45%，也印证了加强文化普及、让更多人感知传承压力的必要性。</p>
+            
+            <div class="chart-row">
+                <div class="chart-item">
+                    <h4>传承核心问题</h4>
+                    <div id="chart7" class="chart-container"></div>
+                </div>
+                <div class="chart-item">
+                    <h4>民间传承痛点</h4>
+                    <div id="chart8" class="chart-container"></div>
                 </div>
             </div>
+        </div>
+
+        <div class="content-section">
+            <h2>四、破局信号：高参与意愿加持，创新路径清晰</h2>
+            <p class="content-text">困境之下，传承仍有较强群众基础与创新空间。超六成（61.06%）受访者愿意主动了解/学习南曲，七成以上（74.34%）愿意参与南曲相关活动，其中"亲子南曲展演"接受度最高（70.8%），唱腔/乐器体验课、故事分享会紧随其后，显示体验式、互动式活动更易激发参与热情。</p>
+            <p class="content-text">文旅融合与年轻化创新成为共识。80.53%的受访者支持南曲与本地旅游深度融合，景区固定展演、文创开发等形式获得广泛认可；在传播创新上，超六成受访者支持"改编年轻化唱段""打造南曲短视频/情景剧""直播平台展演"，为南曲对接年轻群体指明方向。而在支持需求上，64.6%的人认为需优先"组织专业培训，培育传承人/师资"，59.29%呼吁增加资金补贴与场地建设，诉求集中且明确。</p>
+            
+            <div class="chart-row">
+                <div class="chart-item">
+                    <h4>是否愿意尝试弹唱南曲</h4>
+                    <div id="chart9" class="chart-container"></div>
+                </div>
+                <div class="chart-item">
+                    <h4>如何创新南曲传播形式</h4>
+                    <div id="chart10" class="chart-container"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="content-section">
+            <h2>五、传承路径：构建"三维联动"活化体系</h2>
+            <p class="content-text">基于调研数据，五峰南曲的活化需聚焦"人才培育、传播创新、政策保障"三维发力。在人才层面，推动校园与民间联动，43.36%的受访者认可"邀请民间艺人进校园授课"，可通过建立常态化授课与同台展演机制，培育青少年传承人；在传播层面，发力新媒体破圈，针对18-30岁群体强化短视频、直播内容，同时依托景区场景深化文旅融合；在保障层面，落实专业培训、资金补贴与场地建设，破解民间传承的现实困境。</p>
+            
+            <div class="word-cloud-section">
+                <div class="chart-item">
+                    <h4>如何更好地实现校园传承与民间传承联动</h4>
+                    <div id="chart11" class="chart-container"></div>
+                </div>
+                <img src="../images/modules/module3/词云.jpg" alt="词云图" class="word-cloud-image" onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22500%22 height=%22300%22><rect width=%22100%25%22 height=%22100%25%22 fill=%22%23f4a460%22/><text x=%2250%25%22 y=%2250%25%22 text-anchor=%22middle%22 fill=%22white%22 font-size=%2220%22>图片加载失败</text></svg>'">
+            </div>
+            
+            <p class="content-text">从数据来看，五峰南曲的传承并非"无人问津"，而是需要搭建更精准的桥梁——让传统技艺对接年轻受众，让民间活力获得政策支撑，方能让这一土家族非遗瑰宝在新时代持续焕发新生。作为土家族先民智慧的结晶，五峰南曲的唱腔里藏着武陵山区的山水灵韵，唱词中载着土家儿女的生活百态，它不仅是一种曲艺形式，更是维系地域文化认同、传承民族精神的重要纽带。其传承之路，从来不是单一维度的"保护"，而是"活态"的创新与延续。未来，唯有以数据为导向，精准破解人才断层、传播滞后、保障不足等核心难题，让民间艺人有尊严、年轻群体有兴趣、传播形式有新意、政策支撑有力度，才能推动南曲从"博物馆里的非遗"走向"生活中的文化"。既要守住土家文化的本源底色，保留原汁原味的唱腔与内涵，也要主动拥抱时代变化，通过文旅融合让南曲成为五峰的文化名片，通过新媒体传播让更多人听见土家非遗的声音，通过校园与民间的联动让传承脉络生生不息。相信在多方合力之下，这门古老的土家族曲艺，终将在新时代的土壤中扎根生长，绽放出更持久的活力。</p>
         </div>
 
         <div class="page-nav">
-            <a href="page1.html" class="nav-btn">← 匠人守艺</a>
-            <a href="page3.html" class="nav-btn">薪火相传 →</a>
+            <a href="page1.html" class="nav-btn">← 政策解读</a>
+            <a href="page3.html" class="nav-btn">民间心声 →</a>
         </div>
     </section>
 
@@ -126,5 +211,263 @@
             <p>© 2026 五峰南曲：百年文脉传新韵</p>
         </div>
     </footer>
+
+    <script>
+        // 初始化所有图表
+        const colors = ['#4a7c23', '#f4a460', '#8cc9a9', '#c9956c', '#b8860b', '#d4a574', '#7bb898'];
+
+        // 图表1：年龄分布
+        const chart1 = echarts.init(document.getElementById('chart1'));
+        chart1.setOption({
+            tooltip: {trigger: 'item', formatter: '{b}: {c}%'},
+            legend: {orient: 'vertical', left: 'left', top: 'middle', textStyle: {fontSize: 11}},
+            series: [{
+                type: 'pie',
+                radius: ['40%', '70%'],
+                center: ['60%', '50%'],
+                data: [
+                    {value: 30.97, name: '18岁以下'},
+                    {value: 45.13, name: '19-30岁'},
+                    {value: 20.35, name: '31-45岁'},
+                    {value: 2.65, name: '46-60岁'},
+                    {value: 0.88, name: '61岁以上'}
+                ],
+                label: {formatter: '{c}%', fontSize: 11}
+            }]
+        });
+
+        // 图表2：居住地分布
+        const chart2 = echarts.init(document.getElementById('chart2'));
+        chart2.setOption({
+            tooltip: {trigger: 'item', formatter: '{b}: {c}%'},
+            legend: {orient: 'vertical', left: 'left', top: 'middle', textStyle: {fontSize: 11}},
+            series: [{
+                type: 'pie',
+                radius: ['40%', '70%'],
+                center: ['60%', '50%'],
+                data: [
+                    {value: 40.71, name: '五峰土家族自治县'},
+                    {value: 51.33, name: '宜昌市其他地区'},
+                    {value: 7.96, name: '湖北省内其他城市'},
+                    {value: 0, name: '湖北省外'}
+                ],
+                label: {formatter: '{c}%', fontSize: 11}
+            }]
+        });
+
+        // 图表3：受众了解程度
+        const chart3 = echarts.init(document.getElementById('chart3'));
+        chart3.setOption({
+            tooltip: {trigger: 'item', formatter: '{b}: {c}%'},
+            legend: {orient: 'vertical', left: 'left', top: 'middle', textStyle: {fontSize: 10}},
+            series: [{
+                type: 'pie',
+                radius: ['35%', '70%'],
+                center: ['60%', '50%'],
+                data: [
+                    {value: 2.65, name: '非常了解'},
+                    {value: 48.67, name: '一般了解'},
+                    {value: 48.67, name: '不太了解'},
+                    {value: 0, name: '完全不了解'}
+                ],
+                label: {formatter: '{c}%', fontSize: 11}
+            }]
+        });
+
+        // 图表4：接触南曲的频率
+        const chart4 = echarts.init(document.getElementById('chart4'));
+        chart4.setOption({
+            tooltip: {trigger: 'axis', axisPointer: {type: 'shadow'}},
+            grid: {left: '15%', right: '5%', bottom: '3%', top: '10%', containLabel: true},
+            xAxis: {
+                type: 'value',
+                max: 50,
+                interval: 10,
+                name: '(%)'
+            },
+            yAxis: {
+                type: 'category',
+                data: ['经常', '偶尔', '极少', '从未'],
+                inverse: true
+            },
+            series: [{
+                type: 'bar',
+                data: [28.32, 46.9, 11.5, 13.27],
+                label: {show: true, position: 'right', formatter: '{c}%'}
+            }]
+        });
+
+        // 图表5：南曲了解途径
+        const chart5 = echarts.init(document.getElementById('chart5'));
+        chart5.setOption({
+            tooltip: {trigger: 'axis', axisPointer: {type: 'shadow'}},
+            grid: {left: '22%', right: '5%', bottom: '3%', top: '10%', containLabel: true},
+            xAxis: {
+                type: 'value',
+                max: 75,
+                interval: 25,
+                name: '(%)'
+            },
+            yAxis: {
+                type: 'category',
+                data: ['校园课程', '民间展演', '景区宣传', '朋友介绍', '短视频', '电视报纸', '其他'],
+                inverse: true
+            },
+            series: [{
+                type: 'bar',
+                data: [60.18, 61.95, 73.22, 59.29, 28.23, 53.98, 0],
+                label: {show: true, position: 'right', formatter: '{c}%'}
+            }]
+        });
+
+        // 图表6：接触南曲的场景
+        const chart6 = echarts.init(document.getElementById('chart6'));
+        chart6.setOption({
+            tooltip: {trigger: 'axis', axisPointer: {type: 'shadow'}},
+            grid: {left: '22%', right: '5%', bottom: '3%', top: '10%', containLabel: true},
+            xAxis: {
+                type: 'value',
+                max: 75,
+                interval: 25,
+                name: '(%)'
+            },
+            yAxis: {
+                type: 'category',
+                data: ['校园演出', '社区展演', '景区展演', '非遗节', '线上视频', '家庭聚会', '其他'],
+                inverse: true
+            },
+            series: [{
+                type: 'bar',
+                data: [70.41, 64.29, 56.12, 51.02, 56.12, 54.08, 0],
+                label: {show: true, position: 'right', formatter: '{c}%'}
+            }]
+        });
+
+        // 图表7：传承核心问题
+        const chart7 = echarts.init(document.getElementById('chart7'));
+        chart7.setOption({
+            tooltip: {trigger: 'item', formatter: '{b}: {c}%'},
+            legend: {orient: 'vertical', left: 'left', top: 'middle', textStyle: {fontSize: 10}},
+            series: [{
+                type: 'pie',
+                radius: ['35%', '70%'],
+                center: ['60%', '50%'],
+                data: [
+                    {value: 67.26, name: '受众老龄化'},
+                    {value: 69.03, name: '艺人断层'},
+                    {value: 61.95, name: '展演平台少'},
+                    {value: 57.52, name: '缺乏资金'},
+                    {value: 48.67, name: '传播陈旧'},
+                    {value: 61.06, name: '商业价值低'},
+                    {value: 48.67, name: '教学资源匮乏'}
+                ],
+                label: {formatter: '{c}%', fontSize: 10}
+            }]
+        });
+
+        // 图表8：民间传承痛点
+        const chart8 = echarts.init(document.getElementById('chart8'));
+        chart8.setOption({
+            tooltip: {trigger: 'item', formatter: '{b}: {c}%'},
+            legend: {orient: 'vertical', left: 'left', top: 'middle', textStyle: {fontSize: 10}},
+            series: [{
+                type: 'pie',
+                radius: ['35%', '70%'],
+                center: ['60%', '50%'],
+                data: [
+                    {value: 66.37, name: '缺乏场地'},
+                    {value: 69.03, name: '无培训资源'},
+                    {value: 57.52, name: '无资金'},
+                    {value: 66.37, name: '群体老化'},
+                    {value: 44.25, name: '无官方平台'},
+                    {value: 0, name: '其他'}
+                ],
+                label: {formatter: '{c}%', fontSize: 10}
+            }]
+        });
+
+        // 图表9：是否愿意尝试弹唱南曲
+        const chart9 = echarts.init(document.getElementById('chart9'));
+        chart9.setOption({
+            tooltip: {trigger: 'axis', axisPointer: {type: 'shadow'}},
+            grid: {left: '12%', right: '5%', bottom: '8%', top: '10%', containLabel: true},
+            xAxis: {
+                type: 'category',
+                data: ['非常意愿', '愿意尝试', '无所谓', '不愿意']
+            },
+            yAxis: {
+                type: 'value',
+                max: 40,
+                interval: 10,
+                name: '(%)'
+            },
+            series: [{
+                type: 'bar',
+                data: [25.66, 35.4, 23.89, 15.04],
+                label: {show: true, position: 'top', formatter: '{c}%'}
+            }]
+        });
+
+        // 图表10：如何创新南曲传播形式
+        const chart10 = echarts.init(document.getElementById('chart10'));
+        chart10.setOption({
+            tooltip: {trigger: 'axis', axisPointer: {type: 'shadow'}},
+            grid: {left: '25%', right: '5%', bottom: '3%', top: '10%', containLabel: true},
+            xAxis: {
+                type: 'value',
+                max: 65,
+                interval: 20,
+                name: '(%)'
+            },
+            yAxis: {
+                type: 'category',
+                data: ['年轻化唱段', '短视频剧', '直播展演', '文创产品', '校园结合', '其他'],
+                inverse: true
+            },
+            series: [{
+                type: 'bar',
+                data: [63.72, 63.72, 62.83, 46.9, 54.87, 0],
+                label: {show: true, position: 'right', formatter: '{c}%'}
+            }]
+        });
+
+        // 图表11：校园传承与民间传承联动
+        const chart11 = echarts.init(document.getElementById('chart11'));
+        chart11.setOption({
+            tooltip: {trigger: 'axis', axisPointer: {type: 'shadow'}},
+            grid: {left: '22%', right: '5%', bottom: '3%', top: '10%', containLabel: true},
+            xAxis: {
+                type: 'value',
+                max: 45,
+                interval: 15,
+                name: '(%)'
+            },
+            yAxis: {
+                type: 'category',
+                data: ['同台表演', '艺人进校园', '社区表演', '编写教材', '其他'],
+                inverse: true
+            },
+            series: [{
+                type: 'bar',
+                data: [38.49, 43.36, 13.27, 3.54, 0.88],
+                label: {show: true, position: 'right', formatter: '{c}%'}
+            }]
+        });
+
+        // 响应式调整
+        window.addEventListener('resize', function() {
+            chart1.resize();
+            chart2.resize();
+            chart3.resize();
+            chart4.resize();
+            chart5.resize();
+            chart6.resize();
+            chart7.resize();
+            chart8.resize();
+            chart9.resize();
+            chart10.resize();
+            chart11.resize();
+        });
+    </script>
 </body>
 </html>
